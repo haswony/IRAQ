@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, jsonify
 from googleapiclient.discovery import build
+import os
 
 app = Flask(__name__)
 
@@ -29,5 +30,6 @@ def search():
         print(f"Error fetching from YouTube API: {e}")
         return jsonify([]), 500
 
+# تشغيل التطبيق مع إعدادات Heroku
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
