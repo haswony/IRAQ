@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Music Player</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Cairo:wght@400;700&display=swap');
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            text-align: center;
+            background: linear-gradient(to right, #4facfe, #00f2fe);
+            color: white;
+            padding: 20px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        .results {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 600px;
+            margin-top: 20px;
+        }
+
+        .video-item {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            border: 1px solid #fff;
+            border-radius: 5px;
+            padding: 5px;
+        }
+
+        .video-item:hover {
+            transform: scale(1.05);
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .video-item img {
+            margin-right: 10px;
+            border-radius: 8px;
+        }
+
+        #player {
+            margin-top: 20px;
+            display: none;
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <h1>YouTube Music Player</h1>
+    <form id="searchForm">
+        <input type="text" id="searchQuery" placeholder="بحث عن أغنية...">
+        <button type="submit">بحث</button>
+    </form>
+    <div class="results" id="results"></div>
+    <div id="player"></div>
+
+    <script>
+        document.getElementById('searchForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const query = document.getElementById('searchQuery').value;
+            fetch('/search', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ query })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const results = document.getElementById('results');
+                results.innerHTML = '';
+                data.forEach(video => {
+                    const videoItem = document.createElement('div');
+                    videoItem.className = 'video-item';
+                    videoItem.innerHTML = `
+                        <img src="${video.thumbnail}" alt="${video.title}" width="120">
+                        <span>${video.title}</span>
+                    `;
+                    videoItem.addEventListener('click', () => playVideo(video.videoId));
+                    results.appendChild(videoItem);
+                });
+            })
+            .catch(error => console.error('Error fetching data:', error));
+        });
+
+        function playVideo(videoId) {
+            const player = document.getElementById('player');
+            player.innerHTML = `<iframe width="560" height="315" src="https://www.youtube.com/embed/${videoId}?autoplay=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+            player.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
