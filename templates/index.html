@@ -112,6 +112,12 @@
             color: #ff4500;
         }
 
+        .saved-handle {
+            color: #00ff00; /* لون أخضر */
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
         .error-message {
             color: #ff4500;
             font-size: 12px;
@@ -134,6 +140,7 @@
             <input type="text" id="handleInput" class="handle-input" placeholder="أدخل اسم المستخدم (Handle)" required>
             <button id="setHandleButton" class="handle-input">إضافة</button>
             <div id="errorMessage" class="error-message"></div>
+            <div id="savedHandle" class="saved-handle"></div>
         </div>
     </form>
 
@@ -146,6 +153,16 @@
         const setHandleButton = document.getElementById('setHandleButton');
         const searchForm = document.getElementById('searchForm');
         const errorMessage = document.getElementById('errorMessage');
+        const savedHandle = document.getElementById('savedHandle');
+
+        // تحميل الـHandle المحفوظ عند فتح الصفحة
+        const currentHandle = localStorage.getItem('currentHandle');
+        if (currentHandle) {
+            savedHandle.textContent = `اسم المستخدم الحالي: ${currentHandle}`;
+            handleInput.value = currentHandle;
+            handleInput.disabled = true;
+            setHandleButton.disabled = true;
+        }
 
         setHandleButton.addEventListener('click', (event) => {
             event.preventDefault();
@@ -159,9 +176,11 @@
             } else {
                 usedHandles.push(handle);
                 localStorage.setItem('usedHandles', JSON.stringify(usedHandles));
+                localStorage.setItem('currentHandle', handle);
                 errorMessage.textContent = '';
                 handleInput.disabled = true;
                 setHandleButton.disabled = true;
+                savedHandle.textContent = `اسم المستخدم الحالي: ${handle}`;
                 handleInput.style.color = '#ffffff';
             }
         });
