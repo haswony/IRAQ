@@ -27,32 +27,6 @@
             margin-bottom: 20px;
         }
 
-        .share-buttons {
-            display: flex;
-            gap: 10px;
-            margin: 10px 0;
-            flex-wrap: wrap;
-        }
-
-        .share-button {
-            padding: 10px;
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
-            color: white;
-            transition: background-color 0.3s ease;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .facebook { background: #3b5998; }
-        .twitter { background: #1da1f2; }
-        .whatsapp { background: #25d366; }
-        .instagram { background: #e4405f; }
-
         .results {
             display: flex;
             flex-direction: column;
@@ -73,10 +47,6 @@
             background-color: rgba(255, 255, 255, 0.1);
         }
 
-        .video-item:hover {
-            transform: scale(1.05);
-        }
-
         .video-item img {
             margin-right: 10px;
             border-radius: 8px;
@@ -94,7 +64,7 @@
 
         input[type="text"] {
             width: calc(100% - 20px);
-            max-width: 400px;
+            max-width: 300px;
             padding: 8px;
             border: none;
             border-radius: 5px;
@@ -117,43 +87,28 @@
             background-color: #ff5733;
         }
 
-        @media (max-width: 480px) {
-            h1 {
-                font-size: 20px;
-            }
-            .video-item img {
-                width: 60px;
-                height: 45px;
-            }
-            .share-button {
-                width: 35px;
-                height: 35px;
-            }
+        .mic-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .mic-button img {
+            width: 30px;
+            height: 30px;
         }
     </style>
 </head>
 <body>
     <h1>YouTube Music Player</h1>
 
-    <!-- أزرار المشاركة لرابط الموقع -->
-    <div class="share-buttons">
-        <button class="share-button facebook" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(window.location.href), '_blank')">
-            <img src="https://img.icons8.com/ios-filled/50/ffffff/facebook.png" alt="Facebook" width="20">
-        </button>
-        <button class="share-button twitter" onclick="window.open('https://twitter.com/intent/tweet?url=' + encodeURIComponent(window.location.href), '_blank')">
-            <img src="https://img.icons8.com/ios-filled/50/ffffff/twitter.png" alt="Twitter" width="20">
-        </button>
-        <button class="share-button whatsapp" onclick="window.open('https://api.whatsapp.com/send?text=' + encodeURIComponent(window.location.href), '_blank')">
-            <img src="https://img.icons8.com/ios-filled/50/ffffff/whatsapp.png" alt="WhatsApp" width="20">
-        </button>
-        <button class="share-button instagram" onclick="window.open('https://www.instagram.com/?url=' + encodeURIComponent(window.location.href), '_blank')">
-            <img src="https://img.icons8.com/ios-filled/50/ffffff/instagram-new.png" alt="Instagram" width="20">
-        </button>
-    </div>
-
     <form id="searchForm">
         <input type="text" id="searchQuery" placeholder="بحث عن أغنية...">
         <button type="submit">بحث</button>
+        <button class="mic-button" type="button" id="micButton">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/microphone.png" alt="Microphone">
+        </button>
     </form>
 
     <div class="results" id="results"></div>
@@ -163,6 +118,37 @@
         document.getElementById('searchForm').addEventListener('submit', function(event) {
             event.preventDefault();
             const query = document.getElementById('searchQuery').value;
+            performSearch(query);
+        });
+
+        const micButton = document.getElementById('micButton');
+        const searchQuery = document.getElementById('searchQuery');
+        let recognition;
+
+        if ('webkitSpeechRecognition' in window) {
+            recognition = new webkitSpeechRecognition();
+            recognition.lang = 'ar-EG'; // تغيير اللغة إلى العربية
+
+            recognition.onresult = function(event) {
+                const transcript = event.results[0][0].transcript;
+                searchQuery.value = transcript;
+                performSearch(transcript);
+            };
+
+            recognition.onerror = function(event) {
+                console.error('Speech recognition error', event.error);
+            };
+        } else {
+            alert('البحث الصوتي غير مدعوم في هذا المتصفح.');
+        }
+
+        micButton.addEventListener('click', function() {
+            if (recognition) {
+                recognition.start();
+            }
+        });
+
+        function performSearch(query) {
             fetch('/search', {
                 method: 'POST',
                 headers: {
@@ -186,7 +172,7 @@
                 });
             })
             .catch(error => console.error('Error fetching data:', error));
-        });
+        }
 
         function playVideo(videoId) {
             const player = document.getElementById('player');
