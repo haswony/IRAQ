@@ -103,7 +103,11 @@
 <body>
     <h1>YouTube Music Player</h1>
 
-    <form id="searchForm">
+    <!-- إدخال Handle قبل البحث -->
+    <input type="text" id="handleInput" placeholder="أدخل اسم المستخدم (Handle)" required>
+    <button id="setHandleButton">إضافة</button>
+
+    <form id="searchForm" style="display: none;">
         <input type="text" id="searchQuery" placeholder="بحث عن أغنية...">
         <button type="submit">بحث</button>
         <button class="mic-button" type="button" id="micButton">
@@ -115,6 +119,28 @@
     <div id="player"></div>
 
     <script>
+        const usedHandles = JSON.parse(localStorage.getItem('usedHandles')) || [];
+        const handleInput = document.getElementById('handleInput');
+        const setHandleButton = document.getElementById('setHandleButton');
+        const searchForm = document.getElementById('searchForm');
+
+        setHandleButton.addEventListener('click', () => {
+            const handle = handleInput.value.trim();
+            if (!handle) {
+                alert('يرجى إدخال اسم مستخدم (Handle)');
+                return;
+            }
+            if (usedHandles.includes(handle)) {
+                alert('هذا الاسم مستخدم من قبل. يرجى اختيار اسم آخر.');
+            } else {
+                usedHandles.push(handle);
+                localStorage.setItem('usedHandles', JSON.stringify(usedHandles));
+                searchForm.style.display = 'block';
+                handleInput.style.display = 'none';
+                setHandleButton.style.display = 'none';
+            }
+        });
+
         document.getElementById('searchForm').addEventListener('submit', function(event) {
             event.preventDefault();
             const query = document.getElementById('searchQuery').value;
@@ -127,7 +153,7 @@
 
         if ('webkitSpeechRecognition' in window) {
             recognition = new webkitSpeechRecognition();
-            recognition.lang = 'ar-EG'; // تغيير اللغة إلى العربية
+            recognition.lang = 'ar-EG';
 
             recognition.onresult = function(event) {
                 const transcript = event.results[0][0].transcript;
