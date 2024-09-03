@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YouTube Music Player - أفضل مشغل موسيقى يوتيوب</title>
-    <meta name="description" content="استمتع بمشغل موسيقى YouTube Music Player، ابحث وشغل الموسيقى المفضلة لديك بسهولة. أفضل تجربة موسيقية مباشرة عبر الإنترنت.">
-    <meta name="keywords" content="YouTube Music Player, مشغل موسيقى, موسيقى يوتيوب, استماع للأغاني, أفضل مشغل موسيقى, بث مباشر, موسيقى مجانية, مشغل فيديو">
-    
-    <!-- Google Analytics Tracking Code -->
+    <title>YouTube Music Player</title>
+    <!-- كلمات مفتاحية لتحسين السيو -->
+    <meta name="description" content="استمتع بتشغيل الموسيقى ومقاطع الفيديو من يوتيوب مباشرة. مشغل الموسيقى الذي تبحث عنه!">
+    <meta name="keywords" content="YouTube, Music, Player, مشغل موسيقى, يوتيوب, موسيقى, أغاني, فيديوهات, Hussein Ghazal, أغاني عراقية, Hussein Ghazal songs, Arabic music">
+    <meta name="author" content="YouTube Music Player">
+    <!-- رقم تتبع Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-V5GKK90952"></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-V5GKK90952'); // ضع رقم التتبع الخاص بك هنا
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-V5GKK90952');
     </script>
-
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Cairo:wght@400;700&display=swap');
 
@@ -24,22 +24,22 @@
             text-align: center;
             background: linear-gradient(to right, #4facfe, #00f2fe);
             color: white;
-            padding: 20px;
-            overflow: hidden;
+            padding: 10px;
+            margin: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
             min-height: 100vh;
-            animation: fadeIn 2s ease-in-out;
         }
 
         .results {
             display: flex;
             flex-direction: column;
             gap: 10px;
-            max-width: 600px;
-            margin-top: 20px;
+            width: 100%;
+            max-width: 400px;
+            margin-top: 10px;
         }
 
         .video-item {
@@ -50,22 +50,52 @@
             border: 1px solid #fff;
             border-radius: 5px;
             padding: 5px;
+            background-color: rgba(255, 255, 255, 0.1);
         }
 
         .video-item:hover {
             transform: scale(1.05);
-            background-color: rgba(255, 255, 255, 0.1);
         }
 
         .video-item img {
             margin-right: 10px;
             border-radius: 8px;
+            width: 80px;
+            height: 60px;
+            object-fit: cover;
         }
 
         #player {
-            margin-top: 20px;
+            margin-top: 10px;
             display: none;
-            max-width: 100%;
+            width: 100%;
+            max-width: 400px;
+            aspect-ratio: 16/9;
+        }
+
+        input[type="text"] {
+            width: calc(100% - 20px);
+            max-width: 400px;
+            padding: 8px;
+            border: none;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            outline: none;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #ff4500;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #ff5733;
         }
     </style>
 </head>
@@ -97,7 +127,7 @@
                     const videoItem = document.createElement('div');
                     videoItem.className = 'video-item';
                     videoItem.innerHTML = `
-                        <img src="${video.thumbnail}" alt="${video.title}" width="120">
+                        <img src="${video.thumbnail}" alt="${video.title}">
                         <span>${video.title}</span>
                     `;
                     videoItem.addEventListener('click', () => playVideo(video.videoId));
@@ -109,7 +139,7 @@
 
         function playVideo(videoId) {
             const player = document.getElementById('player');
-            player.innerHTML = `<iframe width="560" height="315" src="https://www.youtube.com/embed/${videoId}?autoplay=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+            player.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${videoId}?autoplay=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
             player.style.display = 'block';
         }
     </script>
