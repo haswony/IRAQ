@@ -3,67 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مشغل موسيقى يوتيوب</title>
-
-    <!-- Google Analytics Tracking Code -->
+    <title>YouTube Music Player</title>
+    <!-- كلمات مفتاحية لتحسين السيو -->
+    <meta name="description" content="استمتع بتشغيل الموسيقى ومقاطع الفيديو من يوتيوب مباشرة. مشغل الموسيقى الذي تبحث عنه!">
+    <meta name="keywords" content="YouTube, Music, Player, مشغل موسيقى, يوتيوب, موسيقى, أغاني, فيديوهات, Hussein Ghazal, أغاني عراقية, Hussein Ghazal songs, Arabic music">
+    <meta name="author" content="YouTube Music Player">
+    <!-- رقم تتبع Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-V5GKK90952"></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-V5GKK90952'); // ضع هنا رقم التتبع الخاص بك
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-V5GKK90952');
     </script>
-
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Cairo:wght@400;700&display=swap');
+
         body {
             font-family: 'Roboto', sans-serif;
             text-align: center;
             background: linear-gradient(to right, #4facfe, #00f2fe);
             color: white;
-            padding: 20px;
+            padding: 10px;
+            margin: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
             min-height: 100vh;
-            margin: 0;
         }
-        .search-bar {
-            margin-top: 20px;
-            width: 90%;
-            display: flex;
-            justify-content: center;
-        }
-        #searchQuery {
-            width: 70%;
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-            font-size: 1rem;
-        }
-        button {
-            padding: 10px 20px;
-            margin-left: 10px;
-            border: none;
-            background-color: #007bff;
-            color: white;
-            border-radius: 5px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
+
         .results {
             display: flex;
             flex-direction: column;
             gap: 10px;
-            max-width: 600px;
-            margin-top: 20px;
             width: 100%;
+            max-width: 400px;
+            margin-top: 10px;
         }
+
         .video-item {
             display: flex;
             align-items: center;
@@ -72,48 +50,80 @@
             border: 1px solid #fff;
             border-radius: 5px;
             padding: 5px;
-            overflow: hidden;
-            background-color: rgba(0, 0, 0, 0.2);
-        }
-        .video-item:hover {
-            transform: scale(1.05);
             background-color: rgba(255, 255, 255, 0.1);
         }
+
+        .video-item:hover {
+            transform: scale(1.05);
+        }
+
         .video-item img {
             margin-right: 10px;
             border-radius: 8px;
-            max-width: 100px;
+            width: 80px;
+            height: 60px;
+            object-fit: cover;
         }
+
         #player {
-            margin-top: 20px;
-            max-width: 100%;
+            margin-top: 10px;
             display: none;
+            width: 100%;
+            max-width: 400px;
+            aspect-ratio: 16/9;
         }
-        footer {
-            margin-top: 20px;
-            font-size: 0.8rem;
-            color: #ccc;
+
+        input[type="text"] {
+            width: calc(100% - 20px);
+            max-width: 400px;
+            padding: 8px;
+            border: none;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            outline: none;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #ff4500;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #ff5733;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <form id="searchForm" class="search-bar">
-        <input type="text" id="searchQuery" placeholder="بحث عن أغنية..." aria-label="بحث">
+    <h1>YouTube Music Player</h1>
+    <form id="searchForm">
+        <input type="text" id="searchQuery" placeholder="بحث عن أغنية...">
         <button type="submit">بحث</button>
     </form>
     <div class="results" id="results"></div>
     <div id="player"></div>
-    <footer>© جميع الحقوق محفوظة - حسين بريس</footer>
+    <button class="theme-toggle">تبديل الثيم</button>
 
     <script>
-        const searchForm = document.getElementById('searchForm');
-        const results = document.getElementById('results');
-        const player = document.getElementById('player');
+        document.querySelector('.theme-toggle').addEventListener('click', function() {
+            document.body.classList.toggle('dark-mode');
+        });
 
-        searchForm.addEventListener('submit', function(event) {
+        document.getElementById('searchForm').addEventListener('submit', function(event) {
             event.preventDefault();
             const query = document.getElementById('searchQuery').value;
-
             fetch('/search', {
                 method: 'POST',
                 headers: {
@@ -123,33 +133,26 @@
             })
             .then(response => response.json())
             .then(data => {
-                console.log('Response Data:', data);
+                const results = document.getElementById('results');
                 results.innerHTML = '';
-                if (data.length === 0) {
-                    results.innerHTML = '<p>لم يتم العثور على نتائج</p>';
-                } else {
-                    data.forEach(video => {
-                        const videoItem = document.createElement('div');
-                        videoItem.className = 'video-item';
-                        videoItem.innerHTML = `
-                            <img src="${video.thumbnail}" alt="${video.title}" width="120">
-                            <span>${video.title}</span>
-                        `;
-                        videoItem.addEventListener('click', () => playVideo(video.videoId));
-                        results.appendChild(videoItem);
-                    });
-                }
+                data.forEach(video => {
+                    const videoItem = document.createElement('div');
+                    videoItem.className = 'video-item';
+                    videoItem.innerHTML = `
+                        <img src="${video.thumbnail}" alt="${video.title}">
+                        <span>${video.title}</span>
+                    `;
+                    videoItem.addEventListener('click', () => playVideo(video.videoId));
+                    results.appendChild(videoItem);
+                });
             })
-            .catch(error => {
-                console.error('Error fetching data:', error);
-                results.innerHTML = '<p>حدث خطأ أثناء جلب البيانات. الرجاء المحاولة مرة أخرى.</p>';
-            });
+            .catch(error => console.error('Error fetching data:', error));
         });
 
         function playVideo(videoId) {
-            player.innerHTML = `<iframe width="100%" height="315" src="https://www.youtube.com/embed/${videoId}?autoplay=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+            const player = document.getElementById('player');
+            player.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${videoId}?autoplay=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
             player.style.display = 'block';
-            results.style.display = 'none';
         }
     </script>
 </body>
