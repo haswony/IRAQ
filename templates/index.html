@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="YouTube Music Player - Search and play your favorite music videos with ease.">
     <meta name="keywords" content="YouTube Music, Music Player, Video Player, Search Music, Play Music, Online Music, Music Streaming, Video Search, YouTube API, Music App, أحدث الأغاني, موسيقى عربية, أغاني شعبية, أغاني عراقية, أغاني جديدة">
-    <meta name="author" content="YouTube Music Player">
+    <meta name="author" content="حسين بريس">
     <meta name="robots" content="index, follow">
     <meta property="og:title" content="YouTube Music Player">
     <meta property="og:description" content="Search and play your favorite music videos with ease.">
     <meta property="og:image" content="link-to-your-image.jpg">
     <meta property="og:url" content="https://www.youtubemusic1.com">
-    <title>YouTube Music Player</title>
+    <title>مشغل موسيقى يوتيوب</title>
     <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-V5GKK90952"></script>
     <script>
@@ -48,11 +48,16 @@
             justify-content: space-between;
             align-items: center;
             color: white;
+            z-index: 100;
         }
-        .navbar a {
-            color: white;
-            text-decoration: none;
-            margin: 0 20px;
+        .navbar h1 {
+            margin: 0;
+            padding: 0 20px;
+            font-size: 1.2rem;
+        }
+        .navbar .toggle-mode {
+            margin-right: 20px;
+            cursor: pointer;
         }
         .results {
             display: flex;
@@ -97,20 +102,26 @@
             border-radius: 5px;
             display: none;
         }
+        footer {
+            margin-top: 20px;
+            font-size: 0.8rem;
+            color: #ccc;
+        }
     </style>
 </head>
 <body>
     <div class="navbar">
-        <h1>YouTube Music Player</h1>
-        <button onclick="toggleDarkMode()">Toggle Dark Mode</button>
+        <h1>مشغل موسيقى يوتيوب</h1>
+        <button class="toggle-mode" onclick="toggleDarkMode()">تبديل الوضع الداكن</button>
     </div>
     <form id="searchForm">
-        <input type="text" id="searchQuery" placeholder="بحث عن أغنية...">
+        <input type="text" id="searchQuery" placeholder="بحث عن أغنية..." aria-label="بحث">
         <button type="submit">بحث</button>
     </form>
     <div class="results" id="results"></div>
     <div id="player"></div>
-    <div class="notification" id="notification">New Video Available!</div>
+    <div class="notification" id="notification">تم تحميل فيديو جديد!</div>
+    <footer>© جميع الحقوق محفوظة - حسين بريس</footer>
 
     <script>
         const searchForm = document.getElementById('searchForm');
@@ -142,7 +153,7 @@
                     videoItem.addEventListener('click', () => playVideo(video.videoId));
                     results.appendChild(videoItem);
                 });
-                showNotification("New videos loaded!");
+                showNotification("تم تحميل فيديوهات جديدة!");
             })
             .catch(error => console.error('Error fetching data:', error));
         });
@@ -167,3 +178,4 @@
     </script>
 </body>
 </html>
+
