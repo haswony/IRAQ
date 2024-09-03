@@ -1,21 +1,26 @@
 from flask import Flask, render_template, request, jsonify
+from flask_cors import CORS
 from googleapiclient.discovery import build
 import os
 
+# إعداد التطبيق
 app = Flask(__name__)
+CORS(app)  # السماح للتطبيق بالعمل من أي مكان
 
-# إعداد YouTube API
+# إعداد YouTube API باستخدام المفتاح الخاص بك
 youtube_api_key = "AIzaSyAP0IZuR4dU2Jn7X8NmOp2dWqxiNg-7U7M"  # تأكد من إدخال مفتاح API الصحيح
 youtube = build('youtube', 'v3', developerKey=youtube_api_key)
 
+# المسار الرئيسي للتطبيق
 @app.route('/')
 def index():
     return render_template('index.html')
 
+# مسار البحث
 @app.route('/search', methods=['POST'])
 def search():
     data = request.get_json()  # استقبال البيانات كـ JSON
-    query = data.get('query')  # استخدم .get للوصول إلى البيانات بأمان
+    query = data.get('query')  # استخراج البحث
     try:
         request_youtube = youtube.search().list(
             q=query,
