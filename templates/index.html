@@ -4,20 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YouTube Music Player</title>
-    <!-- كلمات مفتاحية لتحسين السيو -->
-    <meta name="description" content="استمتع بتشغيل الموسيقى ومقاطع الفيديو من يوتيوب مباشرة. مشغل الموسيقى الذي تبحث عنه!">
-    <meta name="keywords" content="YouTube, Music, Player, مشغل موسيقى, يوتيوب, موسيقى, أغاني, فيديوهات, Hussein Ghazal, أغاني عراقية, Hussein Ghazal songs, Arabic music">
-    <meta name="author" content="YouTube Music Player">
-    <!-- رقم تتبع Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-V5GKK90952"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-V5GKK90952');
-    </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Cairo:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
         body {
             font-family: 'Roboto', sans-serif;
@@ -29,9 +17,41 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start;
+            justify-content: center;
             min-height: 100vh;
+            box-sizing: border-box;
         }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .share-buttons {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0;
+            flex-wrap: wrap;
+        }
+
+        .share-button {
+            padding: 10px;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            color: white;
+            transition: background-color 0.3s ease;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .facebook { background: #3b5998; }
+        .twitter { background: #1da1f2; }
+        .whatsapp { background: #25d366; }
+        .instagram { background: #e4405f; }
 
         .results {
             display: flex;
@@ -67,7 +87,6 @@
 
         #player {
             margin-top: 10px;
-            display: none;
             width: 100%;
             max-width: 400px;
             aspect-ratio: 16/9;
@@ -98,29 +117,49 @@
             background-color: #ff5733;
         }
 
-        .theme-toggle {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            cursor: pointer;
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 20px;
+            }
+            .video-item img {
+                width: 60px;
+                height: 45px;
+            }
+            .share-button {
+                width: 35px;
+                height: 35px;
+            }
         }
     </style>
 </head>
 <body>
     <h1>YouTube Music Player</h1>
+
+    <!-- أزرار المشاركة لرابط الموقع -->
+    <div class="share-buttons">
+        <button class="share-button facebook" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(window.location.href), '_blank')">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/facebook.png" alt="Facebook" width="20">
+        </button>
+        <button class="share-button twitter" onclick="window.open('https://twitter.com/intent/tweet?url=' + encodeURIComponent(window.location.href), '_blank')">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/twitter.png" alt="Twitter" width="20">
+        </button>
+        <button class="share-button whatsapp" onclick="window.open('https://api.whatsapp.com/send?text=' + encodeURIComponent(window.location.href), '_blank')">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/whatsapp.png" alt="WhatsApp" width="20">
+        </button>
+        <button class="share-button instagram" onclick="window.open('https://www.instagram.com/?url=' + encodeURIComponent(window.location.href), '_blank')">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/instagram-new.png" alt="Instagram" width="20">
+        </button>
+    </div>
+
     <form id="searchForm">
         <input type="text" id="searchQuery" placeholder="بحث عن أغنية...">
         <button type="submit">بحث</button>
     </form>
+
     <div class="results" id="results"></div>
     <div id="player"></div>
-    <button class="theme-toggle">تبديل الثيم</button>
 
     <script>
-        document.querySelector('.theme-toggle').addEventListener('click', function() {
-            document.body.classList.toggle('dark-mode');
-        });
-
         document.getElementById('searchForm').addEventListener('submit', function(event) {
             event.preventDefault();
             const query = document.getElementById('searchQuery').value;
