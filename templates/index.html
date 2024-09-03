@@ -3,45 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YouTube Music Player</title>
-    <!-- كلمات مفتاحية لتحسين السيو -->
-    <meta name="description" content="استمتع بتشغيل الموسيقى ومقاطع الفيديو من يوتيوب مباشرة. مشغل الموسيقى الذي تبحث عنه!">
-    <meta name="keywords" content="YouTube, Music, Player, مشغل موسيقى, يوتيوب, موسيقى, أغاني, فيديوهات, Hussein Ghazal, أغاني عراقية, Hussein Ghazal songs, Arabic music">
+    <meta name="description" content="YouTube Music Player - Search and play your favorite music videos with ease.">
+    <meta name="keywords" content="YouTube Music, Music Player, Video Player, Search Music, Play Music, Online Music, Music Streaming, Video Search, YouTube API, Music App, أحدث الأغاني, موسيقى عربية, أغاني شعبية, أغاني عراقية, أغاني جديدة">
     <meta name="author" content="YouTube Music Player">
-    <!-- رقم تتبع Google Analytics -->
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="YouTube Music Player">
+    <meta property="og:description" content="Search and play your favorite music videos with ease.">
+    <meta property="og:image" content="link-to-your-image.jpg">
+    <meta property="og:url" content="https://www.youtubemusic1.com">
+    <title>YouTube Music Player</title>
+    <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-V5GKK90952"></script>
     <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-V5GKK90952');
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-V5GKK90952');
     </script>
+    <!-- End Google Analytics -->
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Cairo:wght@400;700&display=swap">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Cairo:wght@400;700&display=swap');
-
         body {
             font-family: 'Roboto', sans-serif;
             text-align: center;
             background: linear-gradient(to right, #4facfe, #00f2fe);
             color: white;
-            padding: 10px;
-            margin: 0;
+            padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start;
+            justify-content: center;
             min-height: 100vh;
+            margin: 0;
         }
-
+        .navbar {
+            width: 100%;
+            background: #333;
+            padding: 10px 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin: 0 20px;
+        }
         .results {
             display: flex;
             flex-direction: column;
             gap: 10px;
-            width: 100%;
-            max-width: 400px;
-            margin-top: 10px;
+            max-width: 600px;
+            margin-top: 60px;
         }
-
         .video-item {
             display: flex;
             align-items: center;
@@ -50,66 +69,57 @@
             border: 1px solid #fff;
             border-radius: 5px;
             padding: 5px;
-            background-color: rgba(255, 255, 255, 0.1);
         }
-
         .video-item:hover {
             transform: scale(1.05);
+            background-color: rgba(255, 255, 255, 0.1);
         }
-
         .video-item img {
             margin-right: 10px;
             border-radius: 8px;
-            width: 80px;
-            height: 60px;
-            object-fit: cover;
         }
-
         #player {
-            margin-top: 10px;
+            margin-top: 20px;
             display: none;
-            width: 100%;
-            max-width: 400px;
-            aspect-ratio: 16/9;
+            max-width: 100%;
         }
-
-        input[type="text"] {
-            width: calc(100% - 20px);
-            max-width: 400px;
-            padding: 8px;
-            border: none;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            outline: none;
+        .dark-mode {
+            background: #121212;
+            color: #f0f0f0;
         }
-
-        button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            background-color: #ff4500;
+        .notification {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            background: #4caf50;
             color: white;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        button:hover {
-            background-color: #ff5733;
+            padding: 10px 20px;
+            border-radius: 5px;
+            display: none;
         }
     </style>
 </head>
 <body>
-    <h1>YouTube Music Player</h1>
+    <div class="navbar">
+        <h1>YouTube Music Player</h1>
+        <button onclick="toggleDarkMode()">Toggle Dark Mode</button>
+    </div>
     <form id="searchForm">
         <input type="text" id="searchQuery" placeholder="بحث عن أغنية...">
         <button type="submit">بحث</button>
     </form>
     <div class="results" id="results"></div>
     <div id="player"></div>
+    <div class="notification" id="notification">New Video Available!</div>
 
     <script>
-        document.getElementById('searchForm').addEventListener('submit', function(event) {
+        const searchForm = document.getElementById('searchForm');
+        const results = document.getElementById('results');
+        const player = document.getElementById('player');
+        const notification = document.getElementById('notification');
+        let darkMode = false;
+
+        searchForm.addEventListener('submit', function(event) {
             event.preventDefault();
             const query = document.getElementById('searchQuery').value;
             fetch('/search', {
@@ -121,26 +131,38 @@
             })
             .then(response => response.json())
             .then(data => {
-                const results = document.getElementById('results');
                 results.innerHTML = '';
                 data.forEach(video => {
                     const videoItem = document.createElement('div');
                     videoItem.className = 'video-item';
                     videoItem.innerHTML = `
-                        <img src="${video.thumbnail}" alt="${video.title}">
+                        <img src="${video.thumbnail}" alt="${video.title}" width="120">
                         <span>${video.title}</span>
                     `;
                     videoItem.addEventListener('click', () => playVideo(video.videoId));
                     results.appendChild(videoItem);
                 });
+                showNotification("New videos loaded!");
             })
             .catch(error => console.error('Error fetching data:', error));
         });
 
         function playVideo(videoId) {
-            const player = document.getElementById('player');
-            player.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${videoId}?autoplay=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+            player.innerHTML = `<iframe width="560" height="315" src="https://www.youtube.com/embed/${videoId}?autoplay=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
             player.style.display = 'block';
+        }
+
+        function toggleDarkMode() {
+            darkMode = !darkMode;
+            document.body.classList.toggle('dark-mode', darkMode);
+        }
+
+        function showNotification(message) {
+            notification.textContent = message;
+            notification.style.display = 'block';
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
         }
     </script>
 </body>
