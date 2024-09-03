@@ -3,12 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="YouTube Music Player - Search and play your favorite music videos with ease.">
-    <meta name="keywords" content="YouTube Music, Music Player, Video Player, Search Music, Play Music, Online Music, Music Streaming, Video Search, YouTube API, Music App">
-    <meta name="author" content="حسين بريس">
     <title>مشغل موسيقى يوتيوب</title>
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
     <style>
         body {
             font-family: 'Roboto', sans-serif;
@@ -22,7 +17,6 @@
             justify-content: flex-start;
             min-height: 100vh;
             margin: 0;
-            overflow-x: hidden;
         }
         .search-bar {
             margin-top: 20px;
@@ -108,6 +102,7 @@
         searchForm.addEventListener('submit', function(event) {
             event.preventDefault();
             const query = document.getElementById('searchQuery').value;
+
             fetch('/search', {
                 method: 'POST',
                 headers: {
@@ -117,22 +112,27 @@
             })
             .then(response => response.json())
             .then(data => {
+                console.log('Response Data:', data); // إضافة هذه الرسالة للتحقق من الاستجابة
                 results.innerHTML = '';
-                data.forEach(video => {
-                    const videoItem = document.createElement('div');
-                    videoItem.className = 'video-item';
-                    videoItem.innerHTML = `
-                        <img src="${video.thumbnail}" alt="${video.title}" width="120">
-                        <div>
+                if (data.length === 0) {
+                    results.innerHTML = '<p>لم يتم العثور على نتائج</p>';
+                } else {
+                    data.forEach(video => {
+                        const videoItem = document.createElement('div');
+                        videoItem.className = 'video-item';
+                        videoItem.innerHTML = `
+                            <img src="${video.thumbnail}" alt="${video.title}" width="120">
                             <span>${video.title}</span>
-                            <div>القناة: ${video.channelTitle}</div>
-                        </div>
-                    `;
-                    videoItem.addEventListener('click', () => playVideo(video.videoId));
-                    results.appendChild(videoItem);
-                });
+                        `;
+                        videoItem.addEventListener('click', () => playVideo(video.videoId));
+                        results.appendChild(videoItem);
+                    });
+                }
             })
-            .catch(error => console.error('Error fetching data:', error));
+            .catch(error => {
+                console.error('Error fetching data:', error);
+                results.innerHTML = '<p>حدث خطأ أثناء جلب البيانات. الرجاء المحاولة مرة أخرى.</p>';
+            });
         });
 
         function playVideo(videoId) {
