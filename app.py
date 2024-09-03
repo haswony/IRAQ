@@ -3,24 +3,24 @@ from flask_cors import CORS
 from googleapiclient.discovery import build
 import os
 
-# إعداد التطبيق
+# Initialize the app
 app = Flask(__name__)
-CORS(app)  # السماح للتطبيق بالعمل من أي مكان
+CORS(app)  # Enable CORS to allow access from any domain
 
-# إعداد YouTube API باستخدام المفتاح الخاص بك
-youtube_api_key = "AIzaSyAP0IZuR4dU2Jn7X8NmOp2dWqxiNg-7U7M"  # تأكد من إدخال مفتاح API الصحيح
+# Set up YouTube API with your API key
+youtube_api_key = "AIzaSyAP0IZuR4dU2Jn7X8NmOp2dWqxiNg-7U7M"  # Insert your correct API key
 youtube = build('youtube', 'v3', developerKey=youtube_api_key)
 
-# المسار الرئيسي للتطبيق
+# Main route
 @app.route('/')
 def index():
     return render_template('index.html')
 
-# مسار البحث
+# Search route
 @app.route('/search', methods=['POST'])
 def search():
-    data = request.get_json()  # استقبال البيانات كـ JSON
-    query = data.get('query')  # استخراج البحث
+    data = request.get_json()  # Get data as JSON
+    query = data.get('query')  # Extract the search query
     try:
         request_youtube = youtube.search().list(
             q=query,
@@ -35,6 +35,6 @@ def search():
         print(f"Error fetching from YouTube API: {e}")
         return jsonify([]), 500
 
-# تشغيل التطبيق مع إعدادات Heroku
+# Run the app with Heroku settings
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
