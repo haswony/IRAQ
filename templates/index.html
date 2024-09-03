@@ -4,6 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>مشغل موسيقى يوتيوب</title>
+
+    <!-- Google Analytics Tracking Code -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-V5GKK90952"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-V5GKK90952'); // ضع هنا رقم التتبع الخاص بك
+    </script>
+
     <style>
         body {
             font-family: 'Roboto', sans-serif;
@@ -112,7 +123,7 @@
             })
             .then(response => response.json())
             .then(data => {
-                console.log('Response Data:', data); // إضافة هذه الرسالة للتحقق من الاستجابة
+                console.log('Response Data:', data);
                 results.innerHTML = '';
                 if (data.length === 0) {
                     results.innerHTML = '<p>لم يتم العثور على نتائج</p>';
