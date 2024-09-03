@@ -148,14 +148,15 @@
     <div id="player"></div>
 
     <script>
-        const usedHandles = JSON.parse(localStorage.getItem('usedHandles')) || [];
+        // تحميل الـHandles المحفوظة من LocalStorage
+        let usedHandles = JSON.parse(localStorage.getItem('usedHandles')) || [];
         const handleInput = document.getElementById('handleInput');
         const setHandleButton = document.getElementById('setHandleButton');
         const searchForm = document.getElementById('searchForm');
         const errorMessage = document.getElementById('errorMessage');
         const savedHandle = document.getElementById('savedHandle');
 
-        // تحميل الـHandle المحفوظ عند فتح الصفحة
+        // تحميل الـHandle الحالي إذا كان موجودًا
         const currentHandle = localStorage.getItem('currentHandle');
         if (currentHandle) {
             savedHandle.textContent = `اسم المستخدم الحالي: ${currentHandle}`;
@@ -164,6 +165,7 @@
             setHandleButton.disabled = true;
         }
 
+        // التحقق من الـHandle عند إضافته
         setHandleButton.addEventListener('click', (event) => {
             event.preventDefault();
             const handle = handleInput.value.trim();
