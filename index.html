@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nonoky - Video Chat</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1 class="logo">Nonoky</h1>
+            <div class="status" id="status">Ready to start</div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Landing Page -->
+            <div id="landingPage" class="landing-page">
+                <div class="landing-content">
+                    <h2>Welcome to Nonoky</h2>
+                    <p>Connect with random people through video chat</p>
+                    <button id="startBtn" class="start-btn">Start Video Chat</button>
+                </div>
+            </div>
+
+            <!-- Video Chat Interface -->
+            <div id="videoChat" class="video-chat hidden">
+                <!-- Video Container -->
+                <div class="video-container">
+                    <!-- Remote Video (Main) -->
+                    <div class="video-wrapper remote-video-wrapper">
+                        <video id="remoteVideo" autoplay playsinline></video>
+                        <div class="video-overlay">
+                            <span id="remoteStatus">Waiting for partner...</span>
+                        </div>
+                    </div>
+
+                    <!-- Local Video (Picture-in-Picture) -->
+                    <div class="video-wrapper local-video-wrapper">
+                        <video id="localVideo" autoplay playsinline muted></video>
+                        <div class="video-overlay">
+                            <span>You</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Controls -->
+                <div class="controls">
+                    <button id="nextBtn" class="control-btn next-btn">
+                        <span>Next</span>
+                    </button>
+                    <button id="muteBtn" class="control-btn mute-btn">
+                        <span id="muteText">Mute</span>
+                    </button>
+                    <button id="cameraBtn" class="control-btn camera-btn">
+                        <span id="cameraText">Turn Camera Off</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Loading/Queue -->
+            <div id="queuePage" class="queue-page hidden">
+                <div class="queue-content">
+                    <div class="spinner"></div>
+                    <h3>Finding you a partner...</h3>
+                    <p id="queueStatus">You are in queue. Please wait.</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
